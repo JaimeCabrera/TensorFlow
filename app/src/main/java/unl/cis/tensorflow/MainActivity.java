@@ -1,13 +1,16 @@
 package unl.cis.tensorflow;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +18,8 @@ import android.widget.Toast;
 
 
 import static android.Manifest.*;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -58,11 +63,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (id) {
             case R.id.buttonOpenCamera: {
                 if (checkPermission()) {
-                    //si el permiso es valido la app abre la camara y sale el toast
-                    Toast.makeText(getApplicationContext(), "Ahora si puedes tomar la foto", Toast.LENGTH_SHORT).show();
+                    //si el permiso es valido la app abre la camara
+                    /*Toast.makeText(getApplicationContext(), "Ahora si puedes tomar la foto", Toast.LENGTH_SHORT).show();*/
                     dispatchTakePictureIntent();
 
                 } else {
+                    /*Toast.makeText(getApplicationContext(), "Por favor Concede los permisos", Toast.LENGTH_SHORT).show();*/
                     requestPermission();
                 }
             }
@@ -73,35 +79,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //funcion para virificar si los permisos estan dados
     private boolean checkPermission() {
-        if (ContextCompat.checkSelfPermission(this, permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            return false;
-        }
+        if (ContextCompat.checkSelfPermission(this, permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+            if (ContextCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // Permission is not granted
+                return false;
+            }
         return true;
     }
+
 
     //esta funcion envia un peticion para pedir permisos en este caso a la camara
     private void requestPermission() {
 
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CODE);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, ACCESS_FINE_LOCATION, WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
     }
     //// para poner un dialogo de permisos en la app
 
-   /* @Override
+    @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
+                    /* Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_SHORT).show();*/
 
                     // main logic
                 } else {
-                    Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
+                    /*Toast.makeText(getApplicationContext(), "Por favor Concede los permisos", Toast.LENGTH_SHORT).show();*/
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                                 != PackageManager.PERMISSION_GRANTED) {
-                            showMessageOKCancel("You need to allow access permissions",
+                            showMessageOKCancel("Por favor Concede los siguientes permisos, para acceder a todas las funcionalidades de al app: Camara,Localizacion,Almacenamiento",
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
@@ -124,7 +131,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setNegativeButton("Cancel", null)
                 .create()
                 .show();
-    }*/
+
+    }
     // fin de metodos para pedir permisos de ejecucion en appp ///
 
     public native String stringFromJNI();
