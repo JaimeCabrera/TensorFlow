@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                                 != PackageManager.PERMISSION_GRANTED) {
-                            showMessageOKCancel("Por favor Concede los siguientes permisos, para acceder a todas las funcionalidades de al app: Camara,Localizacion,Almacenamiento",
+                            showMessageOKCancel("Por favor Concede los siguientes permisos: Camara, Localizacion y Almacenamiento para acceder a todas las funcionalidades de PlagScanner",
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
